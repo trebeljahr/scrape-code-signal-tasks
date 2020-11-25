@@ -32,8 +32,7 @@ async function enterCredentials(page, now) {
 }
 
 async function logIn(page, now) {
-  const signIN =
-    "body > div:nth-child(11) > div > main > div > div > div > div > form > div.-layout-v.-space-v-16 > div.-layout-v.-space-v-8 > div > div";
+  const signIN = 'div[data-name="signup"]';
   await page.waitForSelector(signIN);
   console.log("Trying to log in!");
   await page.click(signIN);

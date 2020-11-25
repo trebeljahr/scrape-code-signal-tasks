@@ -10,7 +10,7 @@ async function setUp() {
   const page = await browser.newPage();
   const now = generateNewDate();
   console.log("Starting browser now - ", now);
-  console.log(`Writing screenshots to ${__dirname}/screenshots/${now}`);
+  console.log(`Writing screenshots to ./screenshots/${now}`);
 
   await mkdir(`screenshots/${now}`);
 

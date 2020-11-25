@@ -21,8 +21,9 @@ async function fetchLinks(page, now) {
   console.log("Fetched next page of links");
 
   const links = [...firstLinks, ...moreLinks];
-  console.log("Done. Found links!");
+  console.log("Done fetching links. Found the following links:");
   console.log(links);
+  return links;
 }
 
 module.exports = { fetchLinks };
