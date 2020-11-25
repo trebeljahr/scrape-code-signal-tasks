@@ -2,28 +2,46 @@ const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
   await page.goto(tasksUrl, { waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/tasks-page.png` });
-
-  const linkSelector = "a.card-task-link";
-  await page.waitForSelector(linkSelector);
-  const firstLinks = await page.$$eval(linkSelector, (am) =>
-    am.filter((e) => e.href).map((e) => e.href)
-  );
-  console.log("Fetched first page of links");
-  const nextPageSelector = 'div[aria-label="Go to the next page"]';
-  await page.waitForSelector(nextPageSelector);
-  console.log("Going to next links page");
-  await page.click(nextPageSelector);
-  await page.waitForSelector(linkSelector);
-  const moreLinks = await page.$$eval(linkSelector, (am) =>
-    am.filter((e) => e.href).map((e) => e.href)
-  );
-  console.log("Fetched next page of links");
-
-  const links = [...firstLinks, ...moreLinks];
-  console.log("Done fetching links. Found the following links:");
+  const links = await fetchRecursively(page);
+  console.log("Done fetching Tasks. Found the following Tasks:");
   console.log(links);
   return links;
 }
 
+async function fetchRecursively(page) {
+  let allLinks = [];
+  while (true) {
+    const foundLinks = await findLinks(page);
+    allLinks = [...allLinks, ...foundLinks];
+    const canGoToNextTask = await goToNextTaskIfPossible(page);
+    if (!canGoToNextTask) {
+      break;
+    }
+  }
+  return allLinks;
+}
+
+async function goToNextTaskIfPossible(page) {
+  const nextPageSelector = 'div[aria-label="Go to the next page"]';
+  await page.waitForSelector(nextPageSelector);
+  const nextPageButton = await page.$(nextPageSelector);
+  const className = await page.evaluate((el) => el.className, nextPageButton);
+  console.log(className);
+
+  if (!className.includes("-disabled")) {
+    console.log("Going to next links page");
+    await page.click(nextPageSelector);
+    return true;
+  }
+  return false;
+}
+
+async function findLinks(page) {
+  const linkSelector = "a.card-task-link";
+  await page.waitForSelector(linkSelector);
+  const foundLinks = await page.$$eval(linkSelector, (am) =>
+    am.filter((e) => e.href).map((e) => e.href)
+  );
+  return foundLinks;
+}
 module.exports = { fetchLinks };

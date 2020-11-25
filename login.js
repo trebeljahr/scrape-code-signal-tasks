@@ -7,7 +7,6 @@ async function login(page) {
 async function openPage(page) {
   const url = "https://app.codesignal.com/login";
   await page.goto(url, { waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/loaded-page.png` });
 }
 
 async function enterCredentials(page) {
@@ -26,9 +25,6 @@ async function enterCredentials(page) {
       .map((char, index) => ([0, 1, 2].includes(index) ? char : "*"))
       .join("")
   );
-  await page.screenshot({
-    path: `screenshots/entered-credentials.png`,
-  });
 }
 
 async function logIn(page) {
@@ -37,7 +33,6 @@ async function logIn(page) {
   console.log("Trying to log in!");
   await page.click(signIN);
   await page.waitForNavigation({ waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/logged-in.png` });
 }
 
 module.exports = {

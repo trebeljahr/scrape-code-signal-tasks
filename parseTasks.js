@@ -34,7 +34,6 @@ async function parseDescription(page) {
   const taskDescriptionChildren = "div.markdown.-arial > p";
   await page.waitForSelector(taskDescriptionSelector);
   await page.waitForSelector(taskDescriptionChildren);
-  await page.screenshot({ path: `screenshots/task-0.png` });
   const description = await page.$eval(taskDescriptionSelector, (element) => {
     return element.innerHTML;
   });
