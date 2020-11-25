@@ -1,0 +1,11 @@
+{
+  "name": "scrape-code-signal-tasks",
+  "version": "1.0.0",
+  "description": "A short script to scrape away code-signal-task-descriptions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rico Trebeljahr",
+  "license": "ISC"
+}
