@@ -26,7 +26,6 @@ async function parseTitle(page) {
   const title = await page.$eval(taskTitleSelector, (element) => {
     return element.innerText;
   });
-  console.log(title);
   return title;
 }
 
@@ -39,18 +38,18 @@ async function parseDescription(page) {
   const description = await page.$eval(taskDescriptionSelector, (element) => {
     return element.innerHTML;
   });
-  console.log(description);
   return description;
 }
 
 async function createMarkdownFile(description, title, link, path) {
-  const header = `
-    # Task - ${title}
+  const header = `# Task - ${title}
 
-    [Do it yourself here!](${link})
+[Do it yourself here!](${link})
 
-    `;
-  await writeFile(path, header + description, { flag: "wx" });
+`;
+  const content = header + description;
+  console.log(content);
+  await writeFile(path, content, { flag: "wx" });
 }
 
 module.exports = { parseTasks };

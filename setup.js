@@ -10,7 +10,7 @@ const rmdir = fs.promises.rmdir;
 async function setUp() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  console.log(`Saving screenshots to ./screenshots`);
+  console.log(`Saving screenshots to ./screenshots/`);
   console.log(`Saving output files to ./out/`);
 
   await setupDirectory("screenshots/");
@@ -38,7 +38,12 @@ const removeDir = function (dir) {
           fs.unlinkSync(dir + "/" + filename);
         }
       });
+      fs.rmdirSync(dir);
+    } else {
+      fs.rmdirSync(dir);
     }
+  } else {
+    console.log("Directory path not found.");
   }
 };
 
