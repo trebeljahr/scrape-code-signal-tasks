@@ -11,6 +11,7 @@ async function setUp() {
   const now = generateNewDate();
   console.log("Starting browser now - ", now);
   console.log(`Writing screenshots to ./screenshots/${now}`);
+  console.log(`Writing output to ./out/${now}`);
 
   await mkdir(`screenshots/${now}`);
   await mkdir(`out/${now}`);
