@@ -26,13 +26,12 @@ async function goToNextTaskIfPossible(page) {
   await page.waitForSelector(nextPageSelector);
   const nextPageButton = await page.$(nextPageSelector);
   const className = await page.evaluate((el) => el.className, nextPageButton);
-  console.log(className);
-
   if (!className.includes("-disabled")) {
-    console.log("Going to next links page");
+    console.log("Going to next tasks page");
     await page.click(nextPageSelector);
     return true;
   }
+  console.log("Reached last tasks page");
   return false;
 }
 

@@ -5,8 +5,8 @@ const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 
 async function parseTasks(page, links) {
+  console.log("Creating output files...");
   for (let i = 0; i < links.length; i++) {
-    console.log(links[i]);
     await parseSingleTask(page, links[i]);
   }
 }
@@ -47,7 +47,7 @@ async function createMarkdownFile(description, title, link, path) {
 
 `;
   const content = header + description;
-  console.log(content);
+  console.log("Writing files for task: ", title);
   await writeFile(path, content, { flag: "wx" });
 }
 

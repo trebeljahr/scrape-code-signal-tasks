@@ -1,11 +1,9 @@
 require("dotenv").config();
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const path = require("path");
 const util = require("util");
 
 const mkdir = util.promisify(fs.mkdir);
-const rmdir = fs.promises.rmdir;
 
 async function setUp() {
   const browser = await puppeteer.launch();
