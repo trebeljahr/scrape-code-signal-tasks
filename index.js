@@ -1,6 +1,6 @@
 const { setUp } = require("./setup");
 const { fetchLinks } = require("./fetchLinks");
-const login = require("./login");
+const { login } = require("./login");
 
 (async () => {
   const { page, now, browser } = await setUp();
