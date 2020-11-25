@@ -1,8 +1,8 @@
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
-async function fetchLinks(page, now) {
+async function fetchLinks(page) {
   await page.goto(tasksUrl, { waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/${now}/tasks-page.png` });
+  await page.screenshot({ path: `screenshots/tasks-page.png` });
 
   const linkSelector = "a.card-task-link";
   await page.waitForSelector(linkSelector);

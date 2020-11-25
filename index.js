@@ -4,9 +4,9 @@ const { login } = require("./login");
 const { parseTasks } = require("./parseTasks");
 
 (async () => {
-  const { page, now, browser } = await setUp();
-  await login(page, now);
-  const links = await fetchLinks(page, now);
-  await parseTasks(page, links, now);
+  const { page, browser } = await setUp();
+  await login(page);
+  const links = await fetchLinks(page);
+  await parseTasks(page, links);
   await browser.close();
 })();

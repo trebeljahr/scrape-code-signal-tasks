@@ -1,17 +1,17 @@
-async function login(page, now) {
-  await openPage(page, now);
-  await enterCredentials(page, now);
-  await logIn(page, now);
+async function login(page) {
+  await openPage(page);
+  await enterCredentials(page);
+  await logIn(page);
 }
 
-async function openPage(page, now) {
+async function openPage(page) {
   const url = "https://app.codesignal.com/login";
   await page.goto(url, { waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/${now}/loaded-page.png` });
+  await page.screenshot({ path: `screenshots/loaded-page.png` });
 }
 
-async function enterCredentials(page, now) {
-  console.log("Got to login page. Entering credentials now...");
+async function enterCredentials(page) {
+  console.log("Got to login page. Entering credential...");
   await page.type("input[name=username]", process.env.USER_NAME, {
     delay: 40,
   });
@@ -27,17 +27,17 @@ async function enterCredentials(page, now) {
       .join("")
   );
   await page.screenshot({
-    path: `screenshots/${now}/entered-credentials.png`,
+    path: `screenshots/entered-credentials.png`,
   });
 }
 
-async function logIn(page, now) {
+async function logIn(page) {
   const signIN = 'div[data-name="signup"]';
   await page.waitForSelector(signIN);
   console.log("Trying to log in!");
   await page.click(signIN);
   await page.waitForNavigation({ waitUntil: "networkidle0" });
-  await page.screenshot({ path: `screenshots/${now}/logged-in.png` });
+  await page.screenshot({ path: `screenshots/logged-in.png` });
 }
 
 module.exports = {
