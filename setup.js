@@ -13,6 +13,7 @@ async function setUp() {
   console.log(`Writing screenshots to ./screenshots/${now}`);
 
   await mkdir(`screenshots/${now}`);
+  await mkdir(`out/${now}`);
 
   return { page, now, browser };
 }
