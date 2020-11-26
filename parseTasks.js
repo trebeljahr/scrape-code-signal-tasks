@@ -79,11 +79,10 @@ async function parseSolution(page) {
       return element.innerText.replace("&nbsp;", " ");
     })
   );
-  console.log(solutionHTML.join("\n"));
   return solutionHTML;
 }
 
-async function createMarkdownFile(description, title, link, path) {
+async function createMarkdownFile(description, title, link) {
   const path = `./out/${title}/README.md`;
   const header = `# Task - ${title}
 
