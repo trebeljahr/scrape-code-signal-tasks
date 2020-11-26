@@ -79,7 +79,7 @@ async function parseSolution(page) {
       return element.innerText.replace("&nbsp;", " ");
     })
   );
-  return solutionHTML;
+  return solutionHTML.join("\n");
 }
 
 async function createMarkdownFile(description, title, link) {
