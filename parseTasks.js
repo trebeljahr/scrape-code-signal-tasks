@@ -1,11 +1,11 @@
 const fs = require("fs");
 const util = require("util");
+const ora = require("ora");
 
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 
 async function parseTasks(page, links) {
-  console.log("Creating output files...");
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
   }
@@ -14,10 +14,12 @@ async function parseTasks(page, links) {
 async function parseSingleTask(page, url) {
   await page.goto(url, { waitUntil: "networkidle0" });
   const title = await parseTitle(page);
+  const spinner = ora(`Writing files for task: ${title}`).start();
   const description = await parseDescription(page);
   await mkdir(`./out/${title}`);
   const path = `./out/${title}/README.md`;
   await createMarkdownFile(description, title, url, path);
+  spinner.succeed(`Writing files for task: ${title} successful!`);
 }
 
 async function parseTitle(page) {
@@ -47,7 +49,6 @@ async function createMarkdownFile(description, title, link, path) {
 
 `;
   const content = header + description;
-  console.log("Writing files for task: ", title);
   await writeFile(path, content, { flag: "wx" });
 }
 

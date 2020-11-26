@@ -1,4 +1,5 @@
 require("dotenv").config();
+const ora = require("ora");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const util = require("util");
@@ -8,7 +9,7 @@ const mkdir = util.promisify(fs.mkdir);
 async function setUp() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  console.log(`Saving output files to ./out/`);
+  ora().info(`Saving output files to ./out/`);
 
   await setupDirectory("out/");
 

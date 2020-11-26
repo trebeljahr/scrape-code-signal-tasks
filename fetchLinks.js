@@ -1,9 +1,11 @@
+const ora = require("ora");
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
+  const spinner = ora("Fetching Links").start();
   await page.goto(tasksUrl, { waitUntil: "networkidle0" });
   const links = await fetchRecursively(page);
-  console.log("Done fetching Tasks. Found the following Tasks:");
+  spinner.succeed("Done fetching Tasks. Found the following Tasks:");
   console.log(links);
   return links;
 }
@@ -27,11 +29,9 @@ async function goToNextTaskIfPossible(page) {
   const nextPageButton = await page.$(nextPageSelector);
   const className = await page.evaluate((el) => el.className, nextPageButton);
   if (!className.includes("-disabled")) {
-    console.log("Going to next tasks page");
     await page.click(nextPageSelector);
     return true;
   }
-  console.log("Reached last tasks page");
   return false;
 }
 
