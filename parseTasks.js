@@ -1,6 +1,7 @@
 const fs = require("fs");
 const util = require("util");
 const ora = require("ora");
+const mkdirp = require("mkdirp");
 
 const languageToFileEnding = {
   JavaScript: ".js",
@@ -15,13 +16,42 @@ const languageToFileEnding = {
 };
 
 const writeFile = util.promisify(fs.writeFile);
-const mkdir = util.promisify(fs.mkdir);
+
+async function mkdirPromisified(path) {
+  return new Promise((resolve, reject) => {
+    mkdirp(path, function (err) {
+      if (err) reject();
+      else resolve();
+    });
+  });
+}
 
 async function parseTasks(page, links) {
+  const pathNames = parseLinksToPaths(links);
+  await createDirectories(pathNames);
+  console.log(pathNames);
+
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
   }
 }
+
+async function createDirectories(pathNames) {
+  for (path in pathNames) {
+    await mkdirPromisified(path);
+  }
+}
+
+function parseLinksToPaths(links) {
+  const pathNames = removeDuplicates(links.map(linkToPathName));
+  return pathNames;
+}
+
+const removeDuplicates = (d) => d.filter(((t = {}), (a) => !(t[a] = a in t)));
+const linkToPathName = (link) => urlToPathName(linkToUrl(link));
+const linkToUrl = (link) => new URL(link);
+const urlToPathName = (url) =>
+  ["./out", ...url.pathname.split("/").slice(1, -1)].join("/");
 
 async function parseSingleTask(page, url) {
   const spinner = ora("Fetching task info").start();
@@ -32,7 +62,6 @@ async function parseSingleTask(page, url) {
   const solution = await parseSolution(page);
 
   spinner.start(`Writing files for task: ${title}`);
-  await mkdir(`./out/${title}`);
   await createMarkdownFile(description, title, url);
   await createSolutionFile(solution, title, fileEnding);
   spinner.succeed(`Writing files for task: ${title} successful!`);
@@ -86,7 +115,10 @@ async function parseSolution(page) {
 }
 
 async function createMarkdownFile(description, title, link) {
-  const path = `./out/${title}/README.md`;
+  const basePath = `${linkToPathName(link)}/${title}`;
+  await mkdirPromisified(basePath);
+  const path = `${basePath}/README.md`;
+  console.log(path);
   const header = `# Task - ${title}
 
 [Do it yourself here!](${link})
@@ -97,7 +129,10 @@ async function createMarkdownFile(description, title, link) {
 }
 
 async function createSolutionFile(solution, title, extension) {
-  const path = `./out/${title}/solution${extension}`;
+  const basePath = `${linkToPathName(link)}/${title}`;
+  await mkdirPromisified(basePath);
+  const path = `${basePath}/solution${extension}`;
+  console.log(path);
   await writeFile(path, solution, { flag: "wx" });
 }
 

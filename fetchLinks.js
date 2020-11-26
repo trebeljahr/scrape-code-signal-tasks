@@ -2,7 +2,7 @@ const ora = require("ora");
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
-  const spinner = ora("Fetching Links").start();
+  const spinner = ora("Fetching Tasks").start();
   await page.goto(tasksUrl, { waitUntil: "networkidle0" });
   const links = await fetchRecursively(page);
   spinner.succeed("Done fetching Tasks. Found the following Tasks:");
