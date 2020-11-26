@@ -17,53 +17,30 @@ const languageToFileEnding = {
 
 const writeFile = util.promisify(fs.writeFile);
 
-async function mkdirPromisified(path) {
-  return new Promise((resolve, reject) => {
-    mkdirp(path, function (err) {
-      if (err) reject();
-      else resolve();
-    });
-  });
-}
-
 async function parseTasks(page, links) {
-  const pathNames = parseLinksToPaths(links);
-  await createDirectories(pathNames);
-  console.log(pathNames);
-
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
   }
 }
 
-async function createDirectories(pathNames) {
-  for (path in pathNames) {
-    await mkdirPromisified(path);
-  }
-}
-
-function parseLinksToPaths(links) {
-  const pathNames = removeDuplicates(links.map(linkToPathName));
-  return pathNames;
-}
-
-const removeDuplicates = (d) => d.filter(((t = {}), (a) => !(t[a] = a in t)));
 const linkToPathName = (link) => urlToPathName(linkToUrl(link));
 const linkToUrl = (link) => new URL(link);
 const urlToPathName = (url) =>
   ["./out", ...url.pathname.split("/").slice(1, -1)].join("/");
 
-async function parseSingleTask(page, url) {
+async function parseSingleTask(page, link) {
   const spinner = ora("Fetching task info").start();
-  await page.goto(url, { waitUntil: "networkidle0" });
+  await page.goto(link, { waitUntil: "networkidle0" });
   const title = await parseTitle(page);
   const description = await parseDescription(page);
   const fileEnding = await parseFileEnding(page);
   const solution = await parseSolution(page);
 
   spinner.start(`Writing files for task: ${title}`);
-  await createMarkdownFile(description, title, url);
-  await createSolutionFile(solution, title, fileEnding);
+  const basePath = `${linkToPathName(link)}/${title}`;
+  await mkdirp(basePath);
+  await createMarkdownFile(description, basePath, title, link);
+  await createSolutionFile(solution, basePath, fileEnding);
   spinner.succeed(`Writing files for task: ${title} successful!`);
 }
 
@@ -114,9 +91,7 @@ async function parseSolution(page) {
   return solution;
 }
 
-async function createMarkdownFile(description, title, link) {
-  const basePath = `${linkToPathName(link)}/${title}`;
-  await mkdirPromisified(basePath);
+async function createMarkdownFile(description, basePath, title, link) {
   const path = `${basePath}/README.md`;
   console.log(path);
   const header = `# Task - ${title}
@@ -128,11 +103,8 @@ async function createMarkdownFile(description, title, link) {
   await writeFile(path, content, { flag: "wx" });
 }
 
-async function createSolutionFile(solution, title, extension) {
-  const basePath = `${linkToPathName(link)}/${title}`;
-  await mkdirPromisified(basePath);
+async function createSolutionFile(solution, basePath, extension) {
   const path = `${basePath}/solution${extension}`;
-  console.log(path);
   await writeFile(path, solution, { flag: "wx" });
 }
 
