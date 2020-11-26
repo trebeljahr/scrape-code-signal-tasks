@@ -70,16 +70,19 @@ async function parseFileEnding(page) {
 }
 
 async function parseSolution(page) {
-  const solutionSelector = "div.view-lines";
-  const solutionChildren = "div.view-lines > div >span";
+  const solutionSelector = "div.view-lines > div:first-child > span";
+  const solutionChildren = "div.view-lines > div > span";
   await page.waitForSelector(solutionSelector);
   await page.waitForSelector(solutionChildren);
-  const solutionHTML = await page.$$eval(solutionChildren, (children) =>
-    children.map((element) => {
-      return element.innerText.replace("&nbsp;", " ");
-    })
-  );
-  return solutionHTML.join("\n");
+
+  await page.click(solutionSelector);
+  await page.keyboard.down("Control");
+  await page.keyboard.down("A");
+  await page.keyboard.press("C");
+  await page.keyboard.up("Control");
+
+  const solution = await page.evaluate(() => navigator.clipboard.readText());
+  return solution;
 }
 
 async function createMarkdownFile(description, title, link) {

@@ -5,9 +5,13 @@ const fs = require("fs");
 const util = require("util");
 
 const mkdir = util.promisify(fs.mkdir);
+const url = "https://app.codesignal.com";
 
 async function setUp() {
   const browser = await puppeteer.launch();
+  const context = browser.defaultBrowserContext();
+  context.overridePermissions(url, ["clipboard-read", "clipboard-write"]);
+
   const page = await browser.newPage();
   ora().info(`Saving output files to ./out/`);
 
