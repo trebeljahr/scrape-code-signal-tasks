@@ -12,10 +12,12 @@ async function parseTasks(page, links) {
 }
 
 async function parseSingleTask(page, url) {
+  const spinner = ora("Fetching task info").start();
   await page.goto(url, { waitUntil: "networkidle0" });
   const title = await parseTitle(page);
-  const spinner = ora(`Writing files for task: ${title}`).start();
   const description = await parseDescription(page);
+
+  spinner.text(`Writing files for task: ${title}`);
   await mkdir(`./out/${title}`);
   const path = `./out/${title}/README.md`;
   await createMarkdownFile(description, title, url, path);
