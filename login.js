@@ -21,12 +21,14 @@ async function enterCredentials(page) {
       .join("")}`
   );
   const spinner = ora("Entering credentials...").start();
-  await page.type("input[name=username]", process.env.USER_NAME, {
-    delay: 20,
-  });
-  await page.type("input[name=password]", process.env.PASSWORD, {
-    delay: 20,
-  });
+
+  const userName = "input[name=username]";
+  const password = "input[name=password]";
+  await page.waitForSelector(userName);
+  await page.waitForSelector(password);
+  await page.type(userName, process.env.USER_NAME, { delay: 20 });
+  await page.type(password, process.env.PASSWORD, { delay: 20 });
+
   spinner.succeed("Entering Credentials successful!");
 }
 
