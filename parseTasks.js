@@ -2,6 +2,18 @@ const fs = require("fs");
 const util = require("util");
 const ora = require("ora");
 
+const languageToFileEnding = {
+  JavaScript: ".js",
+  Haskell: ".hs",
+  "C++": ".cpp",
+  C: ".c",
+  Go: ".go",
+  TypeScript: ".ts",
+  Clojure: ".clj",
+  Dart: ".dart",
+  Python: ".py",
+};
+
 const writeFile = util.promisify(fs.writeFile);
 const mkdir = util.promisify(fs.mkdir);
 
@@ -16,11 +28,13 @@ async function parseSingleTask(page, url) {
   await page.goto(url, { waitUntil: "networkidle0" });
   const title = await parseTitle(page);
   const description = await parseDescription(page);
+  const fileEnding = await parseFileEnding(page);
+  const solution = await parseSolution(page);
 
-  spinner.text(`Writing files for task: ${title}`);
+  spinner.start(`Writing files for task: ${title}`);
   await mkdir(`./out/${title}`);
-  const path = `./out/${title}/README.md`;
-  await createMarkdownFile(description, title, url, path);
+  await createMarkdownFile(description, title, url);
+  await createSolutionFile(solution, title, fileEnding);
   spinner.succeed(`Writing files for task: ${title} successful!`);
 }
 
@@ -34,17 +48,43 @@ async function parseTitle(page) {
 }
 
 async function parseDescription(page) {
-  const taskDescriptionSelector = "div.markdown.-arial";
-  const taskDescriptionChildren = "div.markdown.-arial > p";
-  await page.waitForSelector(taskDescriptionSelector);
-  await page.waitForSelector(taskDescriptionChildren);
-  const description = await page.$eval(taskDescriptionSelector, (element) => {
+  const descriptionSelector = "div.markdown.-arial";
+  const descriptionChildren = "div.markdown.-arial > p";
+  await page.waitForSelector(descriptionSelector);
+  await page.waitForSelector(descriptionChildren);
+  const description = await page.$eval(descriptionSelector, (element) => {
     return element.innerHTML;
   });
   return description;
 }
 
+async function parseFileEnding(page) {
+  const languageSelector = "div.select--content > span.select--title";
+  await page.waitForSelector(languageSelector);
+  const language = await page.$eval(languageSelector, (element) => {
+    return element.innerText;
+  });
+  return language in languageToFileEnding
+    ? languageToFileEnding[language]
+    : ".txt";
+}
+
+async function parseSolution(page) {
+  const solutionSelector = "div.view-lines";
+  const solutionChildren = "div.view-lines > div >span";
+  await page.waitForSelector(solutionSelector);
+  await page.waitForSelector(solutionChildren);
+  const solutionHTML = await page.$$eval(solutionChildren, (children) =>
+    children.map((element) => {
+      return element.innerText.replace("&nbsp;", " ");
+    })
+  );
+  console.log(solutionHTML.join("\n"));
+  return solutionHTML;
+}
+
 async function createMarkdownFile(description, title, link, path) {
+  const path = `./out/${title}/README.md`;
   const header = `# Task - ${title}
 
 [Do it yourself here!](${link})
@@ -52,6 +92,11 @@ async function createMarkdownFile(description, title, link, path) {
 `;
   const content = header + description;
   await writeFile(path, content, { flag: "wx" });
+}
+
+async function createSolutionFile(solution, title, extension) {
+  const path = `./out/${title}/solution${extension}`;
+  await writeFile(path, solution, { flag: "wx" });
 }
 
 module.exports = { parseTasks };
