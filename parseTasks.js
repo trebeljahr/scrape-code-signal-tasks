@@ -99,7 +99,6 @@ async function parseSolution(page) {
 
 async function createMarkdownFile(description, basePath, title, link) {
   const path = `${basePath}/README.md`;
-  console.log(path);
   const header = `# Task - ${title}
 
 [Do it yourself here!](${link})
