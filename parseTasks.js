@@ -13,6 +13,12 @@ const languageToFileEnding = {
   Clojure: ".clj",
   Dart: ".dart",
   Python: ".py",
+  Swift: ".swift",
+  Ruby: ".rb",
+  Java: ".java",
+  PHP: ".php",
+  Lisp: ".lisp",
+  "C#": ".cs",
 };
 
 const writeFile = util.promisify(fs.writeFile);
