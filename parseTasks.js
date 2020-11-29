@@ -2,24 +2,7 @@ const fs = require("fs");
 const util = require("util");
 const ora = require("ora");
 const mkdirp = require("mkdirp");
-
-const languageToFileEnding = {
-  JavaScript: ".js",
-  Haskell: ".hs",
-  "C++": ".cpp",
-  C: ".c",
-  Go: ".go",
-  TypeScript: ".ts",
-  Clojure: ".clj",
-  Dart: ".dart",
-  Python: ".py",
-  Swift: ".swift",
-  Ruby: ".rb",
-  Java: ".java",
-  PHP: ".php",
-  Lisp: ".lisp",
-  "C#": ".cs",
-};
+const { languageToFileEnding } = require("./fileExtensions");
 
 const writeFile = util.promisify(fs.writeFile);
 
