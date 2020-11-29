@@ -10,4 +10,8 @@ Sometimes the script needs a few tries because of puppeteer/CodeSignal interacti
 
 When everything is done the script should have populated the results folder with your solved tasks descriptions and solutions files. 
 
+Example Run should look something like this: 
+
+![Example Run Screenshot](../main/example-output.png)
+
 
