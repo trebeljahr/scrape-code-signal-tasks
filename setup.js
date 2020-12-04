@@ -3,6 +3,7 @@ const ora = require("ora");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const util = require("util");
+const { parsedLinksPath } = require("./fileExtensions");
 
 const mkdir = util.promisify(fs.mkdir);
 const url = "https://app.codesignal.com";
@@ -16,10 +17,19 @@ async function setUp() {
   ora().info(`Saving output files to ./out/`);
 
   await setupDirectory("out/");
-
+  await setupDirectory("temp/");
+  await setupAlreadyParsedLinksFile();
   return { page, browser };
 }
 
+async function setupAlreadyParsedLinksFile() {
+  if (process.argv.includes("parseAll")) {
+    if (fs.existSync(parsedLinksPath)) {
+      await fs.promises.unlink(parsedLinksPath);
+    }
+    await fs.promises.writeFile(parsedLinksPath);
+  }
+}
 async function setupDirectory(dir) {
   const shouldClean = process.argv.includes("clean");
   if (shouldClean) {

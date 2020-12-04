@@ -51,7 +51,6 @@ const filterLinks = (links) => {
     .toString()
     .replace(/\r\n/g, "\n")
     .split("\n");
-  console.log(alreadyParsedLinks);
   return links.filter((link) => !alreadyParsedLinks.includes(link));
 };
 

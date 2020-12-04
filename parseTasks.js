@@ -13,7 +13,6 @@ async function parseTasks(page, links) {
       "To parse all files regardless of which have been parsed before run script again like this: "
     );
     console.log("npm start parseAll");
-    console.log("npm start clean parseAll");
     return;
   }
 
@@ -102,12 +101,12 @@ async function createMarkdownFile(description, basePath, title, link) {
 
 `;
   const content = header + description;
-  await writeFile(path, content, { flag: "wx" });
+  await writeFile(path, content, { flag: "a+" });
 }
 
 async function createSolutionFile(solution, basePath, extension) {
   const path = `${basePath}/solution${extension}`;
-  await writeFile(path, solution, { flag: "wx" });
+  await writeFile(path, solution, { flag: "a+" });
 }
 
 module.exports = { parseTasks };
