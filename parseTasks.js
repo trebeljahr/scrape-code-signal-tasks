@@ -7,6 +7,11 @@ const { languageToFileEnding } = require("./fileExtensions");
 const writeFile = util.promisify(fs.writeFile);
 
 async function parseTasks(page, links) {
+  if (links.length === 0) {
+    console.log("All links have been already parsed into the output.");
+  } else {
+    console.log(links);
+  }
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
   }

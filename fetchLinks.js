@@ -1,4 +1,5 @@
 const ora = require("ora");
+const { alreadyParsedLinks } = require("./alreadyParsedLinks");
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
@@ -6,7 +7,6 @@ async function fetchLinks(page) {
   await page.goto(tasksUrl, { waitUntil: "networkidle0" });
   const links = await fetchRecursively(page);
   spinner.succeed("Done fetching Tasks. Found the following Tasks:");
-  console.log(links);
   return links;
 }
 
@@ -43,4 +43,9 @@ async function findLinks(page) {
   );
   return foundLinks;
 }
-module.exports = { fetchLinks };
+
+async function filterLinks(links) {
+  return links.filter((link) => !alreadyParsedLinks.includes(link));
+}
+
+module.exports = { fetchLinks, filterLinks };

@@ -1,5 +1,5 @@
 const { setUp } = require("./setup");
-const { fetchLinks } = require("./fetchLinks");
+const { fetchLinks, filterLinks } = require("./fetchLinks");
 const { login } = require("./login");
 const { parseTasks } = require("./parseTasks");
 
@@ -7,6 +7,6 @@ const { parseTasks } = require("./parseTasks");
   const { page, browser } = await setUp();
   await login(page);
   const links = await fetchLinks(page);
-  await parseTasks(page, links);
+  await parseTasks(page, filterLinks(links));
   await browser.close();
 })();
