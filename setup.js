@@ -21,7 +21,10 @@ async function setUp() {
 }
 
 async function setupDirectory(dir) {
-  removeDir(dir);
+  const shouldClean = process.argv.includes("clean");
+  if (shouldClean) {
+    removeDir(dir);
+  }
   if (!fs.existsSync(dir)) {
     await mkdir(dir);
   }

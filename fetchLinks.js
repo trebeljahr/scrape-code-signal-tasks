@@ -44,8 +44,7 @@ async function findLinks(page) {
   return foundLinks;
 }
 
-async function filterLinks(links) {
-  return links.filter((link) => !alreadyParsedLinks.includes(link));
-}
+const filterLinks = (links) =>
+  links.filter((link) => !alreadyParsedLinks.includes(link));
 
 module.exports = { fetchLinks, filterLinks };
