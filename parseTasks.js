@@ -8,7 +8,12 @@ const writeFile = util.promisify(fs.writeFile);
 
 async function parseTasks(page, links) {
   if (links.length === 0) {
-    console.log("All links have been already parsed into the output.");
+    console.log("You should have already parsed all files");
+    console.log(
+      "To parse all files regardless of which have been parsed before run script again like this: "
+    );
+    console.log("npm start parseAll");
+    console.log("npm start clean parseAll");
     return;
   }
 

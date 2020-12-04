@@ -1,4 +1,6 @@
 const ora = require("ora");
+const fs = require("fs");
+const { parsedLinksPath } = require("./fileExtensions");
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
@@ -44,7 +46,8 @@ async function findLinks(page) {
 }
 
 const filterLinks = (links) => {
-  const alreadyParsedLinks = readFileSync(parsedLinksPath)
+  const alreadyParsedLinks = fs
+    .readFileSync(parsedLinksPath)
     .toString()
     .replace(/\r\n/g, "\n")
     .split("\n");
