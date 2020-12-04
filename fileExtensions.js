@@ -36,6 +36,9 @@ const languageToFileEnding = {
   "Visual Basic": ".vb",
 };
 
+const parsedLinksPath = "temp/alreadyParsedLinks";
+
 module.exports = {
   languageToFileEnding,
+  parsedLinksPath,
 };

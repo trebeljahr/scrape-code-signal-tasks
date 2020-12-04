@@ -1,5 +1,4 @@
 const ora = require("ora");
-const { alreadyParsedLinks } = require("./alreadyParsedLinks");
 const tasksUrl = "https://app.codesignal.com/profile/trebeljahr/tasks";
 
 async function fetchLinks(page) {
@@ -44,7 +43,13 @@ async function findLinks(page) {
   return foundLinks;
 }
 
-const filterLinks = (links) =>
-  links.filter((link) => !alreadyParsedLinks.includes(link));
+const filterLinks = (links) => {
+  const alreadyParsedLinks = readFileSync(parsedLinksPath)
+    .toString()
+    .replace(/\r\n/g, "\n")
+    .split("\n");
+  console.log(alreadyParsedLinks);
+  return links.filter((link) => !alreadyParsedLinks.includes(link));
+};
 
 module.exports = { fetchLinks, filterLinks };

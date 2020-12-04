@@ -2,19 +2,23 @@ const fs = require("fs");
 const util = require("util");
 const ora = require("ora");
 const mkdirp = require("mkdirp");
-const { languageToFileEnding } = require("./fileExtensions");
+const { languageToFileEnding, parsedLinksPath } = require("./fileExtensions");
 
 const writeFile = util.promisify(fs.writeFile);
 
 async function parseTasks(page, links) {
   if (links.length === 0) {
     console.log("All links have been already parsed into the output.");
-  } else {
-    console.log(links);
+    return;
   }
+
+  console.log(links);
+  const file = fs.createWriteStream(parsedLinksPath);
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
+    file.write(links[i] + "\n");
   }
+  file.end();
 }
 
 const linkToPathName = (link) => urlToPathName(linkToUrl(link));
