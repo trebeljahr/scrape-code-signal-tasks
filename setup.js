@@ -24,7 +24,7 @@ async function setUp() {
 
 async function setupAlreadyParsedLinksFile() {
   if (process.argv.includes("parseAll")) {
-    if (fs.existSync(parsedLinksPath)) {
+    if (fs.existsSync(parsedLinksPath)) {
       await fs.promises.unlink(parsedLinksPath);
     }
     await fs.promises.writeFile(parsedLinksPath);
