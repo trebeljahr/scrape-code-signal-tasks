@@ -25,13 +25,15 @@ async function setUp() {
 async function setupAlreadyParsedLinksFile() {
   if (process.argv.includes("parseAll")) {
     if (fs.existsSync(parsedLinksPath)) {
+      ora.info("Deleting alreadyParsedLinks file");
       await fs.promises.unlink(parsedLinksPath);
     }
     await fs.promises.writeFile(parsedLinksPath);
   }
 }
+
 async function setupDirectory(dir) {
-  const shouldClean = process.argv.includes("clean");
+  const shouldClean = process.argv.includes("parseAll");
   if (shouldClean) {
     removeDir(dir);
   }

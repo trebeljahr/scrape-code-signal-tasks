@@ -8,21 +8,21 @@ const writeFile = util.promisify(fs.writeFile);
 
 async function parseTasks(page, links) {
   if (links.length === 0) {
-    console.log("You should have already parsed all files");
-    console.log(
+    ora().info("You should have already parsed all files");
+    ora().info(
       "To parse all files regardless of which have been parsed before run script again like this: "
     );
-    console.log("npm start parseAll");
+    ora().info("npm start parseAll");
     return;
   }
 
   console.log(links);
-  const file = fs.createWriteStream(parsedLinksPath);
+  const stream = fs.createWriteStream(parsedLinksPath);
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
-    file.write(links[i] + "\n");
+    stream.write(links[i] + "\n", { flags: "a" });
   }
-  file.end();
+  stream.end();
 }
 
 const linkToPathName = (link) => urlToPathName(linkToUrl(link));
@@ -101,12 +101,12 @@ async function createMarkdownFile(description, basePath, title, link) {
 
 `;
   const content = header + description;
-  await writeFile(path, content, { flag: "a+" });
+  await writeFile(path, content);
 }
 
 async function createSolutionFile(solution, basePath, extension) {
   const path = `${basePath}/solution${extension}`;
-  await writeFile(path, solution, { flag: "a+" });
+  await writeFile(path, solution);
 }
 
 module.exports = { parseTasks };
