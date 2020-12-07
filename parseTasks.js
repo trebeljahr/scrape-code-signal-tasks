@@ -17,10 +17,10 @@ async function parseTasks(page, links) {
   }
 
   console.log(links);
-  const stream = fs.createWriteStream(parsedLinksPath);
+  const stream = fs.createWriteStream(parsedLinksPath, { flags: "a+" });
   for (let i = 0; i < links.length; i++) {
     await parseSingleTask(page, links[i]);
-    stream.write(links[i] + "\n", { flags: "a" });
+    stream.write(links[i] + "\n");
   }
   stream.end();
 }
