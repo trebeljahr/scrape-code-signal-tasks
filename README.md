@@ -17,6 +17,10 @@ Now you can just grab and copy them into your github repo and you have all your 
 
 If the script breaks somewhere along the way (sometimes it does due to connection issues), simply restarting and running it again, is often enough to make it work. If it keeps breaking, feel free to create a gist and I'll try to fix it. Or even better feel free to create a pull request that fixes it yourself. 
 
+Also - the script keeps track of the files it has already parsed - if you want to ignore this file and parse all files instead you can run the script with the parseAll flag set like so: 
+
+`npm start parseAll`
+
 
 
 
